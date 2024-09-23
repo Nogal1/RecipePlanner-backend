@@ -3,7 +3,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { check, validationResult } = require('express-validator');
 const router = express.Router();
-const db = require('../config/db'); // Adjust based on your database configuration
+const db = require('../config/db');
 
 // User Registration Route
 router.post('/register', [
