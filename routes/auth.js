@@ -4,6 +4,8 @@ const jwt = require('jsonwebtoken');
 const { check, validationResult } = require('express-validator');
 const router = express.Router();
 const db = require('../config/db');
+const { verifyToken } = require('../middleware/authMiddleware');  // Update path if needed
+
 
 // User Registration Route
 router.post('/register', [
@@ -78,5 +80,42 @@ router.post('/login', [
     }
 });
 
+// Update profile route using .post() instead of .put()
+router.post('/profile', verifyToken, async (req, res) => {
+    const { email, password, newPassword } = req.body;
+    const userId = req.user.id;
 
-module.exports = router;
+    try {
+        let user = await db.query('SELECT * FROM users WHERE id = $1', [userId]);
+
+        if (!user) {
+            return res.status(404).json({ msg: 'User not found' });
+        }
+
+        // If updating password
+        if (password) {
+            const isMatch = await bcrypt.compare(password, user.rows[0].password);
+            if (!isMatch) {
+                return res.status(400).json({ msg: 'Invalid current password' });
+            }
+
+            // Hash the new password
+            const salt = await bcrypt.genSalt(10);
+            const hashedPassword = await bcrypt.hash(newPassword, salt);
+
+            await db.query('UPDATE users SET password = $1 WHERE id = $2', [hashedPassword, userId]);
+        }
+
+        // If updating email
+        if (email) {
+            await db.query('UPDATE users SET email = $1 WHERE id = $2', [email, userId]);
+        }
+
+        res.json({ msg: 'Profile updated successfully' });
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).send('Server error');
+    }
+});
+
+module.exports = router; 
