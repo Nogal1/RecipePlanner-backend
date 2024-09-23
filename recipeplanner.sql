@@ -18,6 +18,15 @@ CREATE TABLE recipes (
     updated_at TIMESTAMP DEFAULT NOW()
 );
 
+CREATE TABLE meal_plans (
+    id SERIAL PRIMARY KEY,
+    user_id INT REFERENCES users(id),
+    recipe_id INT REFERENCES recipes(id),
+    day_of_week VARCHAR(20) NOT NULL,  -- Store the day (e.g., "Monday", "Tuesday")
+    meal_type VARCHAR(20) NOT NULL,    -- Optional: Store meal type (e.g., "breakfast", "lunch", "dinner")
+    created_at TIMESTAMP DEFAULT NOW()
+);
+
 -- Create trigger functions to automatically update the updated_at field
 
 -- Trigger function for the users table

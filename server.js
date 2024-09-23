@@ -4,6 +4,7 @@ const cors = require('cors');
 const dotenv = require('dotenv');
 const authRoutes = require('./routes/auth');  // Authentication routes
 const recipeRoutes = require('./routes/recipes');  // Import the recipe routes
+const mealPlanRoutes = require('./routes/mealPlans');
 
 dotenv.config();
 const app = express();
@@ -15,6 +16,7 @@ app.use(cors());  // Enable CORS for frontend-backend communication
 // Routes
 app.use('/auth', authRoutes);  // Auth routes
 app.use('/recipes', recipeRoutes);  // Recipe-related routes
+app.use('/meal-plans', mealPlanRoutes); // Meal Plans
 
 // Server running on port 3001
 const PORT = process.env.PORT || 3001;
