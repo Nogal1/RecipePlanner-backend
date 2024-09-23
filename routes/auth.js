@@ -61,13 +61,14 @@ router.post('/login', [
             return res.status(400).json({ msg: 'Invalid Credentials' });
         }
 
+        // Verify password
         const isMatch = await bcrypt.compare(password, user.rows[0].password);
         if (!isMatch) {
             return res.status(400).json({ msg: 'Invalid Credentials' });
         }
 
-        // Generate JWT token
-        const payload = { user: { email } };
+        // Generate JWT token with user ID and email
+        const payload = { user: { id: user.rows[0].id, email: user.rows[0].email } };
         const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' });
 
         res.status(200).json({ token });
@@ -76,5 +77,6 @@ router.post('/login', [
         res.status(500).send('Server error');
     }
 });
+
 
 module.exports = router;
