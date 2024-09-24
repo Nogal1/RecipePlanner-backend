@@ -19,6 +19,22 @@ app.use('/auth', authRoutes);  // Auth routes
 app.use('/recipes', recipeRoutes);  // Recipe-related routes
 app.use('/meal-plans', mealPlanRoutes); // Meal Plans
 app.use('/shopping-list', shoppingListRoutes);
+// Random Recipes For HomePage
+app.get('/api/random-recipes', async (req, res) => {
+    const SPOONACULAR_API_KEY = process.env.SPOONACULAR_API_KEY;
+    try {
+        const response = await axios.get('https://api.spoonacular.com/recipes/random', {
+            params: {
+                number: 5,
+                apiKey: SPOONACULAR_API_KEY,
+            },
+        });
+        res.json(response.data.recipes);
+    } catch (error) {
+        console.error('Error fetching random recipes:', error);
+        res.status(500).json({ message: 'Server error while fetching random recipes' });
+    }
+});
 
 // Server running on port 3001
 const PORT = process.env.PORT || 3001;
