@@ -67,7 +67,7 @@ router.get('/search/:ingredients', async (req, res) => {
 });
 
 // Recipe Details Route
-router.get('/recipe/:id', async (req, res) => {
+router.get('/:id', async (req, res) => {
     const recipeId = req.params.id;
     const SPOONACULAR_API_KEY = process.env.SPOONACULAR_API_KEY;
 
