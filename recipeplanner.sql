@@ -27,6 +27,13 @@ CREATE TABLE meal_plans (
     created_at TIMESTAMP DEFAULT NOW()
 );
 
+CREATE TABLE shopping_lists (
+    id SERIAL PRIMARY KEY,
+    user_id INT REFERENCES users(id) ON DELETE CASCADE,  -- Associate the shopping list with a user
+    ingredient VARCHAR(255) NOT NULL,                    -- Store individual ingredients
+    added_at TIMESTAMP DEFAULT NOW()                     -- Timestamp for when the ingredient was added
+);
+
 -- Create trigger functions to automatically update the updated_at field
 
 -- Trigger function for the users table
