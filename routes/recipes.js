@@ -29,6 +29,30 @@ router.post('/save-recipe', verifyToken, async (req, res) => {
     }
 });
 
+// Delete Saved Recipe Route (Protected)
+router.delete('/my-recipes/:id', verifyToken, async (req, res) => {
+    const userId = req.user.id;
+    const recipeId = req.params.id;
+
+    try {
+        // Delete the recipe that belongs to the user
+        const result = await db.query(
+            'DELETE FROM recipes WHERE id = $1 AND user_id = $2 RETURNING *', 
+            [recipeId, userId]
+        );
+
+        if (result.rowCount === 0) {
+            return res.status(404).json({ msg: 'Recipe not found or you are not authorized to delete it' });
+        }
+
+        res.json({ msg: 'Recipe deleted successfully' });
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).send('Server Error');
+    }
+});
+
+
 // Fetch Saved Recipes Route (Protected)
 router.get('/my-recipes', verifyToken, async (req, res) => {
     const userId = req.user.id;
