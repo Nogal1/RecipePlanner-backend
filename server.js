@@ -19,6 +19,7 @@ app.use('/auth', authRoutes);  // Auth routes
 app.use('/recipes', recipeRoutes);  // Recipe-related routes
 app.use('/meal-plans', mealPlanRoutes); // Meal Plans
 app.use('/shopping-list', shoppingListRoutes);
+
 // Random Recipes For HomePage
 app.get('/api/random-recipes', async (req, res) => {
     const SPOONACULAR_API_KEY = process.env.SPOONACULAR_API_KEY;
@@ -33,6 +34,30 @@ app.get('/api/random-recipes', async (req, res) => {
     } catch (error) {
         console.error('Error fetching random recipes:', error);
         res.status(500).json({ message: 'Server error while fetching random recipes' });
+    }
+});
+
+// Autocomplete Recipe Search Route
+app.get('/api/recipes/autocomplete', async (req, res) => {
+    const query = req.query.query;
+    const SPOONACULAR_API_KEY = process.env.SPOONACULAR_API_KEY;
+
+    if (!query) {
+        return res.status(400).json({ msg: 'Query is required' });
+    }
+
+    try {
+        const response = await axios.get(`https://api.spoonacular.com/recipes/autocomplete`, {
+            params: {
+                query,
+                number: 5,  // Number of results to fetch
+                apiKey: SPOONACULAR_API_KEY,
+            }
+        });
+        res.json(response.data);  // Send autocomplete results back to frontend
+    } catch (error) {
+        console.error('Error fetching autocomplete results:', error.response?.data || error.message);
+        res.status(500).json({ msg: 'Server error fetching autocomplete results' });
     }
 });
 
