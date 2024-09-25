@@ -38,7 +38,7 @@ app.get('/api/random-recipes', async (req, res) => {
 });
 
 // Autocomplete Recipe Search Route
-app.get('/api/recipes/autocomplete', async (req, res) => {
+app.get('/api/ingredients/autocomplete', async (req, res) => {
     const query = req.query.query;
     const SPOONACULAR_API_KEY = process.env.SPOONACULAR_API_KEY;
 
@@ -47,7 +47,7 @@ app.get('/api/recipes/autocomplete', async (req, res) => {
     }
 
     try {
-        const response = await axios.get(`https://api.spoonacular.com/recipes/autocomplete`, {
+        const response = await axios.get(`https://api.spoonacular.com/food/ingredients/autocomplete`, {
             params: {
                 query,
                 number: 5,  // Number of results to fetch

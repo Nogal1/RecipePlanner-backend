@@ -20,6 +20,7 @@ CREATE TABLE recipes (
 
 CREATE TABLE meal_plans (
     id SERIAL PRIMARY KEY,
+    spoonacular_id INT,
     user_id INT REFERENCES users(id),
     recipe_id INT REFERENCES recipes(id),
     day_of_week VARCHAR(20) NOT NULL,  -- Store the day (e.g., "Monday", "Tuesday")
